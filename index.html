@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Math Research Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #timer {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    #gameFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none; /* Hidden until timer ends */
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div id="timer">00:30</div>
+  <iframe id="gameFrame"></iframe>
+
+  <script>
+    let timeLeft = 30;
+    const timer = document.getElementById('timer');
+    const iframe = document.getElementById('gameFrame');
+
+    const interval = setInterval(() => {
+      timeLeft--;
+      let minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      if (seconds < 10) seconds = "0" + seconds;
+      timer.textContent = `${minutes}:${seconds}`;
+
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        timer.textContent = "Time's up!";
+
+        // Inject the iframe
+        iframe.style.display = 'block';
+        iframe.src = 'https://bloxd.io';
+
+        // Fallback: if iframe fails (because of security block), do a redirect
+        setTimeout(() => {
+          if (!iframe.contentWindow || iframe.contentDocument.documentElement.innerHTML.includes("blocked")) {
+            window.location.href = 'https://bloxd.io';
+          }
+        }, 2000);
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
